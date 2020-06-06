@@ -2,7 +2,9 @@ import * as R from 'ramda';
 import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
 import {
-  saveCard
+  saveCard,
+  questionInput,
+  answerInput
 } from './Update';
 
 const { 
@@ -34,14 +36,16 @@ function buttonAddFlashCard(dispatch, model) {
  * Textarea input
  * @param {*} label 
  */
-function textAreaInput(label) {
+function textAreaInput(label, inputValue, oninput) {
   return div(
     {},
     [
       div({className: 'b f6 mv1'}, label),
       textarea({
         className: 'w-100 bg-washed-yellow outline-0',
-        type: 'textarea'
+        type: 'textarea',
+        value: inputValue,
+        oninput
       })
     ]
   )
@@ -50,7 +54,9 @@ function textAreaInput(label) {
 /**
  * Form card view
  */
-function formCard () {
+function formCard (dispatch, model) {
+  const {question , answer } = model;
+
   return div(
     {
       className: '"w-third pa2'
@@ -61,8 +67,8 @@ function formCard () {
           className: 'w-100 pa2 bg-light-yellow mv2 shadow-1 relative'
         },
         [
-          textAreaInput('Question'),
-          textAreaInput('Answer'),
+          textAreaInput('Question', question, e => dispatch(questionInput(e.target.value))),
+          textAreaInput('Answer', answer, e => dispatch(answerInput(e.target.value))),
           button({
             className: 'f4 ph3 pv2 br1 bg-gray bn white mv2',
           }, 'Save')

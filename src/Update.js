@@ -1,13 +1,30 @@
 import * as R from 'ramda';
 
 const MSGS = {
-  SAVE_CARD : 'ADD_CARD'
+  SAVE_CARD : 'ADD_CARD',
+  QUESTION_INPUT: 'QUESTION_INPUT',
+  ANSWER_INPUT: 'ANSWER_INPUT',
 }
 
 export function saveCard (model) {
   return {
     type: MSGS.SAVE_CARD,
     ...model
+  }
+} 
+
+export function questionInput (question) {
+  debugger;
+  return {
+    type: MSGS.QUESTION_INPUT,
+    question
+  }
+} 
+
+export function answerInput (answer) {
+  return {
+    type: MSGS.ANSWER_INPUT,
+    answer
   }
 } 
 
@@ -18,7 +35,21 @@ function update(msg, model) {
       return {
         ...updatedModel
       }
-    } 
+    }
+    case MSGS.QUESTION_INPUT: {
+      const { question } = msg;
+      return {
+        ...model,
+        question
+      }
+    }
+    case MSGS.ANSWER_INPUT: {
+      const { answer } = msg;
+      return {
+        ...model,
+        answer
+      }
+    }
   }
   return model;
 }
