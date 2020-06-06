@@ -5,7 +5,8 @@ import {
   addCardButton,
   saveCard,
   questionInput,
-  answerInput
+  answerInput,
+  changeEditMode
 } from './Update';
 
 const { 
@@ -43,7 +44,7 @@ function textAreaInput(label, inputValue, oninput) {
     [
       div({className: 'b f6 mv1'}, label),
       textarea({
-        className: 'w-100 bg-washed-yellow outline-0',
+        className: 'w-100 bg-washed-yellow outline-0 h4',
         type: 'textarea',
         value: inputValue,
         oninput
@@ -65,7 +66,7 @@ function formCard (dispatch, model) {
     [
       div(
         {
-          className: 'w-100 pa2 bg-light-yellow mv2 shadow-1 relative'
+          className: 'w-100 h-100 pa2 bg-light-yellow mv2 shadow-1 relative'
         },
         [
           textAreaInput('Question', question, e => dispatch(questionInput(e.target.value))),
@@ -81,14 +82,14 @@ function formCard (dispatch, model) {
 }
 
 
-function displayInfo(label, value) {
+function displayInfo(label, value, onclick) {
   return div(
     {
       className: ''
     },
     [
-      div({ className: 'b f6 mv1 underline'}, label),
-      div({ className: 'pointer'}, value)
+      div({ className: 'b f6 mv1 underline' }, label),
+      div({ className: 'pointer', onclick: onclick }, value)
     ]
   )
 }
@@ -103,11 +104,11 @@ function cardTpl (dispatch, model) {
     [
       div(
         {
-          className: 'w-100 pa2 bg-light-yellow shadow-1 mv2 relative pb5',
+          className: 'w-100 h-100 pa2 bg-light-yellow shadow-1 mv2 relative',
         },
         [
-          displayInfo('Question', question),
-          displayInfo('Answer', answer)
+          displayInfo('Question', question, () => dispatch(changeEditMode(model.id))),
+          displayInfo('Answer', answer, () => dispatch(changeEditMode(model.id)))
         ]
       )
     ]

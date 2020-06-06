@@ -3,6 +3,7 @@ import * as R from 'ramda';
 const MSGS = {
   ADD_CARD : 'ADD_CARD',
   SAVE_CARD: 'SAVE_CARD',
+  CHANGE_EDIT_MODE: 'CHANGE_EDIT_MODE',
   QUESTION_INPUT: 'QUESTION_INPUT',
   ANSWER_INPUT: 'ANSWER_INPUT',
 }
@@ -29,8 +30,15 @@ export function answerInput (answer) {
 }
 
 export function saveCard(editId) {
-  return  {
+  return {
     type: MSGS.SAVE_CARD,
+    editId
+  }
+}
+
+export function changeEditMode(editId) {
+  return {
+    type: MSGS.CHANGE_EDIT_MODE,
     editId
   }
 }
@@ -55,6 +63,23 @@ function update(msg, model) {
       return {
         ...model,
         answer
+      }
+    }
+    case MSGS.CHANGE_EDIT_MODE: {
+      const { editId } = msg;
+      const cards = R.map(card => {
+        if (card.id === editId) {
+          model.question = card.question;
+          model.answer = card.answer;
+          return { ...card, isCreateMode : true  };
+        }
+        return card;
+      }, model.cards);
+
+      return {
+        ...model, 
+        cards,
+        editId: null
       }
     }
     case MSGS.SAVE_CARD: {
