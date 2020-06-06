@@ -2,6 +2,7 @@ import * as R from 'ramda';
 import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
 import {
+  addCardButton,
   saveCard,
   questionInput,
   answerInput
@@ -22,7 +23,7 @@ function buttonAddFlashCard(dispatch, model) {
       {
         className: 'pa2 br1 mv2 bg-green bn white',
         type: 'Button',
-        onclick: () => dispatch(saveCard(model))
+        onclick: () => dispatch(addCardButton(model))
       },
       [
         i({ className: 'fa fa-plus ph1'}),
@@ -71,6 +72,7 @@ function formCard (dispatch, model) {
           textAreaInput('Answer', answer, e => dispatch(answerInput(e.target.value))),
           button({
             className: 'f4 ph3 pv2 br1 bg-gray bn white mv2',
+            onclick: () => dispatch(saveCard(model.id))
           }, 'Save')
         ]
       )

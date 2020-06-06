@@ -1,20 +1,20 @@
 import * as R from 'ramda';
 
 const MSGS = {
-  SAVE_CARD : 'ADD_CARD',
+  ADD_CARD : 'ADD_CARD',
+  SAVE_CARD: 'SAVE_CARD',
   QUESTION_INPUT: 'QUESTION_INPUT',
   ANSWER_INPUT: 'ANSWER_INPUT',
 }
 
-export function saveCard (model) {
+export function addCardButton (model) {
   return {
-    type: MSGS.SAVE_CARD,
+    type: MSGS.ADD_CARD,
     ...model
   }
 } 
 
 export function questionInput (question) {
-  debugger;
   return {
     type: MSGS.QUESTION_INPUT,
     question
@@ -26,11 +26,18 @@ export function answerInput (answer) {
     type: MSGS.ANSWER_INPUT,
     answer
   }
-} 
+}
+
+export function saveCard(editId) {
+  return  {
+    type: MSGS.SAVE_CARD,
+    editId
+  }
+}
 
 function update(msg, model) {
   switch (msg.type) {
-    case MSGS.SAVE_CARD: {
+    case MSGS.ADD_CARD: {
       const updatedModel = addCard(model);
       return {
         ...updatedModel
@@ -48,6 +55,21 @@ function update(msg, model) {
       return {
         ...model,
         answer
+      }
+    }
+    case MSGS.SAVE_CARD: {
+      const { editId } = msg;
+      const { question, answer } = model;
+      const cards = R.map(card => {
+        if (card.id === editId) {
+          return { ...card, question, answer };
+        }
+        return meal;
+      }, model.cards);
+
+      return {
+        ...model, 
+        cards
       }
     }
   }
