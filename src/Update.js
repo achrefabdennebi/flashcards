@@ -62,14 +62,18 @@ function update(msg, model) {
       const { question, answer } = model;
       const cards = R.map(card => {
         if (card.id === editId) {
-          return { ...card, question, answer };
+          return { ...card, question, answer, isCreateMode : false  };
         }
-        return meal;
+        return card;
       }, model.cards);
 
       return {
         ...model, 
-        cards
+        cards,
+        question:'',
+        answer: '',
+        isCreateMode: true,
+        editId: null
       }
     }
   }
@@ -77,8 +81,8 @@ function update(msg, model) {
 }
 
 function addCard(model) {
-  const { nextId, question, answer } = model;
-  const card  = { id: nextId, question, answer };
+  const { nextId, question, answer, isCreateMode } = model;
+  const card  = { id: nextId, question, answer, isCreateMode };
   const cards = [...model.cards, card];
   return {
     ...model,

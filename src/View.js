@@ -60,7 +60,7 @@ function formCard (dispatch, model) {
 
   return div(
     {
-      className: '"w-third pa2'
+      className: 'w-third pa2'
     },
     [
       div(
@@ -80,15 +80,56 @@ function formCard (dispatch, model) {
   )
 }
 
+
+function displayInfo(label, value) {
+  return div(
+    {
+      className: ''
+    },
+    [
+      div({ className: 'b f6 mv1 underline'}, label),
+      div({ className: 'pointer'}, value)
+    ]
+  )
+}
+
+function cardTpl (dispatch, model) {
+  const { question, answer } = model;
+
+  return div(
+    {
+      className: 'w-third pa2'
+    },
+    [
+      div(
+        {
+          className: 'w-100 pa2 bg-light-yellow shadow-1 mv2 relative pb5',
+        },
+        [
+          displayInfo('Question', question),
+          displayInfo('Answer', answer)
+        ]
+      )
+    ]
+  )
+}
+
 /**
  * List of card to be shown
  * @param {*} dispatch 
  * @param {*} cards 
  */
 function listCard(dispatch, cards) {
-  const rows = R.map(
-    R.partial(formCard, [dispatch]), cards);
-  return rows
+  // TO improve
+  const formCards = R.filter((card) => card.isCreateMode === true, cards);
+  const viewCards = R.filter((card) => card.isCreateMode === false, cards);
+
+  const viewCardsItem = R.map( R.partial(cardTpl, [dispatch]), viewCards);
+  const formCardsItem = R.map( R.partial(formCard, [dispatch]), formCards);
+
+  const rows = [...formCardsItem, ...viewCardsItem]
+  
+  return rows;
 }
 
 /**
