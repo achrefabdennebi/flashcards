@@ -3,6 +3,7 @@ import * as R from 'ramda';
 const MSGS = {
   ADD_CARD : 'ADD_CARD',
   SAVE_CARD: 'SAVE_CARD',
+  DELETE_CARD: 'DELETE_CARD',
   CHANGE_EDIT_MODE: 'CHANGE_EDIT_MODE',
   QUESTION_INPUT: 'QUESTION_INPUT',
   ANSWER_INPUT: 'ANSWER_INPUT',
@@ -40,6 +41,13 @@ export function changeEditMode(editId) {
   return {
     type: MSGS.CHANGE_EDIT_MODE,
     editId
+  }
+}
+
+export function deleteCard(id) {
+  return {
+    type: MSGS.DELETE_CARD,
+    id
   }
 }
 
@@ -100,6 +108,14 @@ function update(msg, model) {
         isCreateMode: true,
         editId: null
       }
+    }
+    case MSGS.DELETE_CARD: {
+      const { id } = msg;
+      const cards = R.filter(
+        card => card.id !== id
+      , model.cards);
+
+      return { ...model, cards };
     }
   }
   return model;

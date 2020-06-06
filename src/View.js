@@ -6,7 +6,8 @@ import {
   saveCard,
   questionInput,
   answerInput,
-  changeEditMode
+  changeEditMode,
+  deleteCard
 } from './Update';
 
 const { 
@@ -108,7 +109,13 @@ function cardTpl (dispatch, model) {
         },
         [
           displayInfo('Question', question, () => dispatch(changeEditMode(model.id))),
-          displayInfo('Answer', answer, () => dispatch(changeEditMode(model.id)))
+          displayInfo('Answer', answer, () => dispatch(changeEditMode(model.id))),
+          i(
+            {
+              className: 'absolute top-0 right-0 fa fa-remove fa-fw black-50 pointer',
+              onclick: () => dispatch(deleteCard(model.id))
+            }
+          )
         ]
       )
     ]
