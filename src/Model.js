@@ -3,6 +3,7 @@ const initModel = {
     editId: null,
     question: '',
     answer: '',
+    showAnswer: false,
     isCreateMode: true,
     cards: []
 };

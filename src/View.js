@@ -7,7 +7,8 @@ import {
   questionInput,
   answerInput,
   changeEditMode,
-  deleteCard
+  deleteCard,
+  displayAnswer
 } from './Update';
 
 const { 
@@ -16,7 +17,8 @@ const {
  pre,
  button,
  i,
- textarea
+ textarea,
+ a
 } = hh(h);
 
 function buttonAddFlashCard(dispatch, model) {
@@ -95,9 +97,28 @@ function displayInfo(label, value, onclick) {
   )
 }
 
-function cardTpl (dispatch, model) {
-  const { question, answer } = model;
+function displayLink(value, onclick) {
+  return div(
+    {
+      className : ''
+    },
+    [
+     a(
+        {
+          className: 'f6 underline link pointer',
+          onclick: onclick
+        },
+        value
+      )
+    ]
+  )
+}
 
+function cardTpl (dispatch, model) {
+  const { question, answer, showAnswer } = model;
+  const  tplShowAnswer = showAnswer ? displayInfo('Answer', answer, () => dispatch(changeEditMode(model.id)))
+                                    : displayLink('Show Answer', () => dispatch(displayAnswer(model.id)));
+                                    
   return div(
     {
       className: 'w-third pa2'
@@ -109,7 +130,7 @@ function cardTpl (dispatch, model) {
         },
         [
           displayInfo('Question', question, () => dispatch(changeEditMode(model.id))),
-          displayInfo('Answer', answer, () => dispatch(changeEditMode(model.id))),
+          tplShowAnswer,
           i(
             {
               className: 'absolute top-0 right-0 fa fa-remove fa-fw black-50 pointer',

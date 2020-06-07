@@ -7,6 +7,7 @@ const MSGS = {
   CHANGE_EDIT_MODE: 'CHANGE_EDIT_MODE',
   QUESTION_INPUT: 'QUESTION_INPUT',
   ANSWER_INPUT: 'ANSWER_INPUT',
+  DISPLAY_ANSWER: 'DISPLAY_ANSWER'
 }
 
 export function addCardButton (model) {
@@ -47,6 +48,13 @@ export function changeEditMode(editId) {
 export function deleteCard(id) {
   return {
     type: MSGS.DELETE_CARD,
+    id
+  }
+}
+
+export function displayAnswer (id) {
+  return {
+    type: MSGS.DISPLAY_ANSWER,
     id
   }
 }
@@ -95,7 +103,7 @@ function update(msg, model) {
       const { question, answer } = model;
       const cards = R.map(card => {
         if (card.id === editId) {
-          return { ...card, question, answer, isCreateMode : false  };
+          return { ...card, question, answer, isCreateMode : false, showAnswer: false };
         }
         return card;
       }, model.cards);
@@ -105,6 +113,7 @@ function update(msg, model) {
         cards,
         question:'',
         answer: '',
+        showAnswer: false,
         isCreateMode: true,
         editId: null
       }
@@ -117,13 +126,28 @@ function update(msg, model) {
 
       return { ...model, cards };
     }
+    case MSGS.DISPLAY_ANSWER: {
+      const { id } = msg;
+      debugger;
+      const cards = R.map(card => {
+        if (card.id === id) {
+          return { ...card, showAnswer: true };
+        }
+        return card;
+      }, model.cards);
+  
+      return {
+        ...model,
+        cards,
+      }
+    }
   }
   return model;
 }
 
 function addCard(model) {
-  const { nextId, question, answer, isCreateMode } = model;
-  const card  = { id: nextId, question, answer, isCreateMode };
+  const { nextId, question, answer, isCreateMode, showAnswer } = model;
+  const card  = { id: nextId, question, answer, isCreateMode, showAnswer };
   const cards = [...model.cards, card];
   return {
     ...model,
