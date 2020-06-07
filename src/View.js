@@ -8,7 +8,8 @@ import {
   answerInput,
   changeEditMode,
   deleteCard,
-  displayAnswer
+  displayAnswer,
+  setRank
 } from './Update';
 
 const { 
@@ -114,7 +115,13 @@ function displayLink(value, onclick) {
   )
 }
 
-function displayBtnGroup() {
+function displayBtnGroup(dispatch, model) {
+  const { id } = model;
+  const RATINGS = {
+    BAD : 0,
+    GOOD: 1,
+    GREAT: 2
+  }
 
   return div(
     {
@@ -126,9 +133,9 @@ function displayBtnGroup() {
           className: 'mv2 flex justify-between',
         },
         [
-          button({ className: 'f4 ph3 pv2 bg-red bn white br1'}, 'BAD'),
-          button({ className: 'f4 ph3 pv2 bg-blue bn white br1'}, 'Good'),
-          button({ className: 'f4 ph3 pv2 bg-dark-green bn white br1'}, 'Great')
+          button({ className: 'f4 ph3 pv2 bg-red bn white br1', onclick: () => dispatch(setRank(RATINGS.BAD, id))}, 'BAD'),
+          button({ className: 'f4 ph3 pv2 bg-blue bn white br1', onclick: () => dispatch(setRank(RATINGS.GOOD, id))}, 'Good'),
+          button({ className: 'f4 ph3 pv2 bg-dark-green bn white br1', onclick: () => dispatch(setRank(RATINGS.GREAT, id))}, 'Great')
         ]
       )
     ]
@@ -140,7 +147,7 @@ function cardTpl (dispatch, model) {
   const { question, answer, showAnswer } = model;
   const  tplShowAnswer = showAnswer ? displayInfo('Answer', answer, () => dispatch(changeEditMode(model.id)))
                                     : displayLink('Show Answer', () => dispatch(displayAnswer(model.id)));
-  const tplButton = showAnswer ? displayBtnGroup() : null;
+  const tplButton = showAnswer ? displayBtnGroup(dispatch, model) : null;
 
   return div(
     {
@@ -174,8 +181,9 @@ function cardTpl (dispatch, model) {
  */
 function listCard(dispatch, cards) {
   // TO improve
-  const formCards = R.filter((card) => card.isCreateMode === true, cards);
-  const viewCards = R.filter((card) => card.isCreateMode === false, cards);
+  const sortedCards = R.sortWith([R.ascend(R.prop('rank'))], cards);
+  const formCards = R.filter((card) => card.isCreateMode === true, sortedCards);
+  const viewCards = R.filter((card) => card.isCreateMode === false, sortedCards);
 
   const viewCardsItem = R.map( R.partial(cardTpl, [dispatch]), viewCards);
   const formCardsItem = R.map( R.partial(formCard, [dispatch]), formCards);

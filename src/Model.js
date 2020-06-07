@@ -4,6 +4,7 @@ const initModel = {
     question: '',
     answer: '',
     showAnswer: false,
+    rank: 0,
     isCreateMode: true,
     cards: []
 };

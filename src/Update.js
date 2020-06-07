@@ -7,7 +7,8 @@ const MSGS = {
   CHANGE_EDIT_MODE: 'CHANGE_EDIT_MODE',
   QUESTION_INPUT: 'QUESTION_INPUT',
   ANSWER_INPUT: 'ANSWER_INPUT',
-  DISPLAY_ANSWER: 'DISPLAY_ANSWER'
+  DISPLAY_ANSWER: 'DISPLAY_ANSWER',
+  SET_RANK: 'SET_RANK'
 }
 
 export function addCardButton (model) {
@@ -55,6 +56,14 @@ export function deleteCard(id) {
 export function displayAnswer (id) {
   return {
     type: MSGS.DISPLAY_ANSWER,
+    id
+  }
+}
+
+export function setRank(rank, id) {
+  return {
+    type: MSGS.SET_RANK,
+    rank, 
     id
   }
 }
@@ -128,7 +137,7 @@ function update(msg, model) {
     }
     case MSGS.DISPLAY_ANSWER: {
       const { id } = msg;
-      debugger;
+
       const cards = R.map(card => {
         if (card.id === id) {
           return { ...card, showAnswer: true };
@@ -141,13 +150,28 @@ function update(msg, model) {
         cards,
       }
     }
+    case MSGS.SET_RANK: {
+      const { id, rank } = msg;
+      debugger;
+      const cards = R.map(card => {
+        if (card.id === id) {
+          return { ...card, showAnswer: false, rank };
+        }
+        return card;
+      }, model.cards);
+
+      return {
+        ...model, 
+        cards
+      }
+    }
   }
   return model;
 }
 
 function addCard(model) {
-  const { nextId, question, answer, isCreateMode, showAnswer } = model;
-  const card  = { id: nextId, question, answer, isCreateMode, showAnswer };
+  const { nextId, question, answer, isCreateMode, showAnswer, rank } = model;
+  const card  = { id: nextId, question, answer, isCreateMode, showAnswer, rank };
   const cards = [...model.cards, card];
   return {
     ...model,
