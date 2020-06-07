@@ -92,7 +92,7 @@ function displayInfo(label, value, onclick) {
     },
     [
       div({ className: 'b f6 mv1 underline' }, label),
-      div({ className: 'pointer', onclick: onclick }, value)
+      div({ className: 'pointer hover-bg-black-10 bg-animate pv2 ph1', onclick: onclick }, value)
     ]
   )
 }
@@ -114,11 +114,34 @@ function displayLink(value, onclick) {
   )
 }
 
+function displayBtnGroup() {
+
+  return div(
+    {
+      className: 'absolute bottom-0 left-0 w-100 ph2'
+    },
+    [
+      div(
+        {
+          className: 'mv2 flex justify-between',
+        },
+        [
+          button({ className: 'f4 ph3 pv2 bg-red bn white br1'}, 'BAD'),
+          button({ className: 'f4 ph3 pv2 bg-blue bn white br1'}, 'Good'),
+          button({ className: 'f4 ph3 pv2 bg-dark-green bn white br1'}, 'Great')
+        ]
+      )
+    ]
+
+  )
+} 
+
 function cardTpl (dispatch, model) {
   const { question, answer, showAnswer } = model;
   const  tplShowAnswer = showAnswer ? displayInfo('Answer', answer, () => dispatch(changeEditMode(model.id)))
                                     : displayLink('Show Answer', () => dispatch(displayAnswer(model.id)));
-                                    
+  const tplButton = showAnswer ? displayBtnGroup() : null;
+
   return div(
     {
       className: 'w-third pa2'
@@ -126,11 +149,12 @@ function cardTpl (dispatch, model) {
     [
       div(
         {
-          className: 'w-100 h-100 pa2 bg-light-yellow shadow-1 mv2 relative',
+          className: 'w-100 h-100 pa2 bg-light-yellow shadow-1 mv2 relative pb5',
         },
         [
           displayInfo('Question', question, () => dispatch(changeEditMode(model.id))),
           tplShowAnswer,
+          tplButton,
           i(
             {
               className: 'absolute top-0 right-0 fa fa-remove fa-fw black-50 pointer',
