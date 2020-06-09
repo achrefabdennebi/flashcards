@@ -4,7 +4,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
   },
-  watch: true,
+  watch: false,
   devServer: {
     contentBase: './src',
     compress: true,
