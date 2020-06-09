@@ -4,7 +4,8 @@
   "description": "Flash Card App",
   "scripts": {
     "start": "webpack-dev-server --open",
-    "design": "serve ./design"
+    "design": "serve ./design",
+    "build" : "webpack"
   },
   "author": "James Moore",
   "license": "MIT",
